@@ -19,55 +19,55 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-package org.jenkinsci.git;
+package org.jenkinsci.git.log;
 
-import java.io.IOException;
-
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.jenkinsci.git.log.Commit;
-import org.junit.Test;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
- * Unit tests of {@link Commit} class
+ * Gson utilities
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CommitTest extends GitTestCase {
+public abstract class GsonUtils {
+
+	private static final GsonBuilder BUILDER = createBuilder();
+
+	private static final Gson GSON = createGson();
 
 	/**
-	 * Create commit with null {@link Repository}
+	 * Get standard {@link GsonBuilder} configuration
+	 * 
+	 * @return builder
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullRepository() {
-		new Commit(null, null);
+	public static final GsonBuilder getBuilder() {
+		return BUILDER;
 	}
 
 	/**
-	 * Create commit with null {@link RevCommit}
+	 * Create standard {@link GsonBuilder} configuration
 	 * 
-	 * @throws IOException
+	 * @return builder
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullCommit() throws IOException {
-		new Commit(git.repo(), null);
+	public static final GsonBuilder createBuilder() {
+		return new GsonBuilder().excludeFieldsWithoutExposeAnnotation();
 	}
 
 	/**
-	 * Test commits being equals
+	 * Get standard {@link Gson} configuration
 	 * 
-	 * @throws Exception
+	 * @return gson
 	 */
-	@Test
-	public void equalsCommit() throws Exception {
-		Repository repo = git.repo();
-		RevCommit revCommit = git.add("file.txt", "abcd");
-		Commit commit1 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit1));
-		assertFalse(commit1.equals("commit"));
-		Commit commit2 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit2));
-		assertEquals(commit1.hashCode(), commit2.hashCode());
-		assertEquals(commit1.toString(), commit2.toString());
+	public static final Gson getGson() {
+		return GSON;
+	}
+
+	/**
+	 * Create standard {@link Gson} configuration
+	 * 
+	 * @return gson
+	 */
+	public static final Gson createGson() {
+		return BUILDER.create();
 	}
 }

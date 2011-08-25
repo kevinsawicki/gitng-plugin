@@ -21,6 +21,8 @@
  */
 package org.jenkinsci.git.log;
 
+import com.google.gson.annotations.Expose;
+
 import hudson.model.User;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.tasks.Mailer.UserProperty;
@@ -34,6 +36,7 @@ import java.util.List;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.gitective.core.Check;
 
 /**
  * Class that represents a single commit in a Git repository.
@@ -42,16 +45,22 @@ import org.eclipse.jgit.revwalk.RevCommit;
  */
 public class Commit extends Entry {
 
+	@Expose
 	private final Date date;
 
+	@Expose
 	private final String email;
 
+	@Expose
 	private final String id;
 
+	@Expose
 	private final String message;
 
+	@Expose
 	private final String name;
 
+	@Expose
 	private final List<CommitFile> files;
 
 	/**
@@ -118,5 +127,21 @@ public class Commit extends Entry {
 		for (CommitFile file : files)
 			paths.add(file.getPath());
 		return paths;
+	}
+
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Commit))
+			return false;
+		return Check.equalsNonNull(name, ((Commit) obj).name);
+	}
+
+	public String toString() {
+		return id + " by " + name + " <" + email + ">";
 	}
 }

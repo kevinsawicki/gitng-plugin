@@ -19,55 +19,68 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  */
-package org.jenkinsci.git;
+package org.jenkinsci.git.log;
 
-import java.io.IOException;
+import hudson.model.AbstractBuild;
+import hudson.scm.ChangeLogSet;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.jenkinsci.git.log.Commit;
-import org.junit.Test;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- * Unit tests of {@link Commit} class
+ * Commit log class that provides iteration of {@link Commit} objects
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CommitTest extends GitTestCase {
+public class CommitLog extends ChangeLogSet<Commit> {
+
+	private final List<Commit> commits;
 
 	/**
-	 * Create commit with null {@link Repository}
+	 * @param build
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullRepository() {
-		new Commit(null, null);
+	public CommitLog(AbstractBuild<?, ?> build) {
+		this(build, null);
 	}
 
 	/**
-	 * Create commit with null {@link RevCommit}
-	 * 
-	 * @throws IOException
+	 * @param build
+	 * @param commits
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullCommit() throws IOException {
-		new Commit(git.repo(), null);
+	public CommitLog(AbstractBuild<?, ?> build, List<Commit> commits) {
+		super(build);
+		if (commits == null)
+			this.commits = Collections.emptyList();
+		else
+			this.commits = Collections.unmodifiableList(commits);
 	}
 
 	/**
-	 * Test commits being equals
+	 * Set the parent on each commit to be this commit log
 	 * 
-	 * @throws Exception
+	 * @return this commit log
 	 */
-	@Test
-	public void equalsCommit() throws Exception {
-		Repository repo = git.repo();
-		RevCommit revCommit = git.add("file.txt", "abcd");
-		Commit commit1 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit1));
-		assertFalse(commit1.equals("commit"));
-		Commit commit2 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit2));
-		assertEquals(commit1.hashCode(), commit2.hashCode());
-		assertEquals(commit1.toString(), commit2.toString());
+	public CommitLog updateCommits() {
+		for (Commit commit : this)
+			commit.setParent(this);
+		return this;
+	}
+
+	/**
+	 * Get commit array
+	 * 
+	 * @return non-null but possibly empty array of commits
+	 */
+	public Commit[] toArray() {
+		return commits.toArray(new Commit[commits.size()]);
+	}
+
+	public Iterator<Commit> iterator() {
+		return commits.iterator();
+	}
+
+	public boolean isEmptySet() {
+		return commits.isEmpty();
 	}
 }

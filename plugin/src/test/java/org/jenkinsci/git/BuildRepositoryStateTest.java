@@ -79,5 +79,4 @@ public class BuildRepositoryStateTest {
 		assertEquals(state1.hashCode(), state2.hashCode());
 		assertEquals(state1.toString(), state2.toString());
 	}
-
 }

@@ -21,53 +21,45 @@
  */
 package org.jenkinsci.git;
 
-import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.jenkinsci.git.log.Commit;
+import junit.framework.Assert;
+
+import org.jenkinsci.git.log.GsonUtils;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Commit} class
+ * Unit tests of {@link GsonUtils}
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CommitTest extends GitTestCase {
+public class GsonUtilsTest extends Assert {
 
 	/**
-	 * Create commit with null {@link Repository}
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullRepository() {
-		new Commit(null, null);
-	}
-
-	/**
-	 * Create commit with null {@link RevCommit}
-	 * 
-	 * @throws IOException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullCommit() throws IOException {
-		new Commit(git.repo(), null);
-	}
-
-	/**
-	 * Test commits being equals
-	 * 
-	 * @throws Exception
+	 * Test getters for {@link GsonBuilder} and {@link Gson}
 	 */
 	@Test
-	public void equalsCommit() throws Exception {
-		Repository repo = git.repo();
-		RevCommit revCommit = git.add("file.txt", "abcd");
-		Commit commit1 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit1));
-		assertFalse(commit1.equals("commit"));
-		Commit commit2 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit2));
-		assertEquals(commit1.hashCode(), commit2.hashCode());
-		assertEquals(commit1.toString(), commit2.toString());
+	public void getters() {
+		assertNotNull(GsonUtils.getBuilder());
+		assertNotNull(GsonUtils.getGson());
+	}
+
+	/**
+	 * Test creating a {@link GsonBuilder} instance
+	 */
+	@Test
+	public void createBuilder() {
+		assertNotNull(GsonUtils.createBuilder());
+		assertNotSame(GsonUtils.createBuilder(), GsonUtils.createBuilder());
+	}
+
+	/**
+	 * Test creating a {@link Gson} instance
+	 */
+	@Test
+	public void createGson() {
+		assertNotNull(GsonUtils.createGson());
+		assertNotSame(GsonUtils.createGson(), GsonUtils.createGson());
 	}
 }

@@ -21,53 +21,45 @@
  */
 package org.jenkinsci.git;
 
+import hudson.scm.ChangeLogSet;
+import hudson.scm.ChangeLogSet.Entry;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.jenkinsci.git.log.Commit;
+import org.jenkinsci.git.log.CommitLogReader;
+import org.jenkinsci.git.log.CommitLogWriter;
 import org.junit.Test;
 
 /**
- * Unit tests of {@link Commit} class
+ * Unit tests of {@link CommitLogWriter}
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CommitTest extends GitTestCase {
+public class CommitLogWriterTest extends GitTestCase {
 
 	/**
-	 * Create commit with null {@link Repository}
+	 * Create log writer with null writer
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullRepository() {
-		new Commit(null, null);
+	public void nullWriter() {
+		new CommitLogWriter(null);
 	}
 
 	/**
-	 * Create commit with null {@link RevCommit}
+	 * Test empty write
 	 * 
 	 * @throws IOException
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullCommit() throws IOException {
-		new Commit(git.repo(), null);
-	}
-
-	/**
-	 * Test commits being equals
-	 * 
-	 * @throws Exception
-	 */
 	@Test
-	public void equalsCommit() throws Exception {
-		Repository repo = git.repo();
-		RevCommit revCommit = git.add("file.txt", "abcd");
-		Commit commit1 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit1));
-		assertFalse(commit1.equals("commit"));
-		Commit commit2 = new Commit(repo, revCommit);
-		assertTrue(commit1.equals(commit2));
-		assertEquals(commit1.hashCode(), commit2.hashCode());
-		assertEquals(commit1.toString(), commit2.toString());
+	public void emptyWrite() throws IOException {
+		File log = File.createTempFile("changelog", ".json");
+		CommitLogWriter writer = new CommitLogWriter(new FileWriter(log));
+		writer.write(null).close();
+		CommitLogReader reader = new CommitLogReader();
+		ChangeLogSet<? extends Entry> set = reader.parse(null, log);
+		assertNotNull(set);
+		assertTrue(set.isEmptySet());
 	}
 }

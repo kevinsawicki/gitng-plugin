@@ -21,11 +21,14 @@
  */
 package org.jenkinsci.git.log;
 
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import com.google.gson.annotations.Expose;
 
 import hudson.scm.ChangeLogSet.AffectedFile;
 import hudson.scm.EditType;
+
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.gitective.core.Check;
 
 /**
  * Class that represents a file affected by a commit
@@ -34,10 +37,13 @@ import hudson.scm.EditType;
  */
 public class CommitFile implements AffectedFile {
 
+	@Expose
 	private final ChangeType type;
 
+	@Expose
 	private final String oldPath;
 
+	@Expose
 	private final String newPath;
 
 	/**
@@ -84,5 +90,23 @@ public class CommitFile implements AffectedFile {
 		default:
 			return EditType.EDIT;
 		}
+	}
+
+	public int hashCode() {
+		return toString().hashCode();
+	}
+
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof CommitFile))
+			return false;
+		CommitFile other = (CommitFile) obj;
+		return type == other.type && Check.equals(oldPath, other.oldPath)
+				&& Check.equals(newPath, other.newPath);
+	}
+
+	public String toString() {
+		return getPath() + " [" + type + "]";
 	}
 }
