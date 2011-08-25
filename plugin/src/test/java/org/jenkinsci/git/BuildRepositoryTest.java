@@ -29,6 +29,8 @@ import org.junit.Test;
 
 /**
  * Unit tests of {@link BuildRepository}
+ * 
+ * @author Kevin Sawicki (kevin@github.com)
  */
 public class BuildRepositoryTest {
 
