@@ -69,16 +69,26 @@ public class GitHelper extends Assert {
 	}
 
 	/**
-	 * Initialize a new repo in a new directory
+	 * Create and verify temp directory that will be deleted on exit
 	 * 
-	 * @return created .git folder
+	 * @return created directory
 	 */
-	public File initRepo() {
+	public File tempDirectory() {
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		assertNotNull("java.io.tmpdir was null", tmpDir);
 		File dir = new File(tmpDir, "git-test-case-" + System.nanoTime());
 		assertTrue(dir.mkdir());
 		dir.deleteOnExit();
+		return dir;
+	}
+
+	/**
+	 * Initialize a new repo in a new directory
+	 * 
+	 * @return created .git folder
+	 */
+	public File initRepo() {
+		File dir = tempDirectory();
 
 		Git.init().setDirectory(dir).setBare(false).call();
 		File repo = new File(dir, Constants.DOT_GIT);
