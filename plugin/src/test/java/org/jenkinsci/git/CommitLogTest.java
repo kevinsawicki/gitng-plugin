@@ -21,13 +21,11 @@
  */
 package org.jenkinsci.git;
 
+import hudson.model.User;
 import hudson.scm.EditType;
+import hudson.tasks.Mailer;
 
-import java.io.IOException;
-
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.jenkinsci.git.log.Commit;
 import org.jenkinsci.git.log.CommitFile;
 import org.junit.Test;
@@ -37,25 +35,7 @@ import org.junit.Test;
  * 
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class CommitLogTest extends org.jenkinsci.git.GitTestCase {
-
-	/**
-	 * Create commit with null {@link Repository}
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullRepository() {
-		new Commit(null, null);
-	}
-
-	/**
-	 * Create commit with null {@link RevCommit}
-	 * 
-	 * @throws IOException
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void commitWithNullCommit() throws IOException {
-		new Commit(new FileRepository(testRepo), null);
-	}
+public class CommitLogTest extends JenkinsGitTestCase {
 
 	/**
 	 * Test commit that contains a single added file
@@ -63,13 +43,18 @@ public class CommitLogTest extends org.jenkinsci.git.GitTestCase {
 	 * @throws Exception
 	 */
 	@Test
-	public void commitWithAdd() throws Exception {
-		RevCommit commit = add("file.txt", "content");
-		Commit parsed = new Commit(new FileRepository(testRepo), commit);
+	public void testCommitWithAdd() throws Exception {
+		RevCommit commit = git.add("file.txt", "content");
+		Commit parsed = new Commit(git.repo(), commit);
 		assertEquals(commit.getFullMessage(), parsed.getMsg());
 		assertEquals(commit.name(), parsed.getCommitId());
 		assertEquals(commit.getAuthorIdent().getWhen().getTime(),
 				parsed.getTimestamp());
+		User user = parsed.getAuthor();
+		assertNotNull(user);
+		assertEquals(commit.getAuthorIdent().getName(), user.getFullName());
+		assertEquals(commit.getAuthorIdent().getEmailAddress(), user
+				.getProperty(Mailer.UserProperty.class).getAddress());
 
 		assertNotNull(parsed.getAffectedPaths());
 		assertEquals(1, parsed.getAffectedPaths().size());
@@ -89,13 +74,18 @@ public class CommitLogTest extends org.jenkinsci.git.GitTestCase {
 	 */
 	@Test
 	public void commitWithEdit() throws Exception {
-		add("file.txt", "content");
-		RevCommit commit = add("file.txt", "content2");
-		Commit parsed = new Commit(new FileRepository(testRepo), commit);
+		git.add("file.txt", "content");
+		RevCommit commit = git.add("file.txt", "content2");
+		Commit parsed = new Commit(git.repo(), commit);
 		assertEquals(commit.getFullMessage(), parsed.getMsg());
 		assertEquals(commit.name(), parsed.getCommitId());
 		assertEquals(commit.getAuthorIdent().getWhen().getTime(),
 				parsed.getTimestamp());
+		User user = parsed.getAuthor();
+		assertNotNull(user);
+		assertEquals(commit.getAuthorIdent().getName(), user.getFullName());
+		assertEquals(commit.getAuthorIdent().getEmailAddress(), user
+				.getProperty(Mailer.UserProperty.class).getAddress());
 
 		assertNotNull(parsed.getAffectedPaths());
 		assertEquals(1, parsed.getAffectedPaths().size());

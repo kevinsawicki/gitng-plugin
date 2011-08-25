@@ -21,27 +21,35 @@
  */
 package org.jenkinsci.git;
 
-import org.junit.Before;
+import java.io.IOException;
 
-import junit.framework.Assert;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.jenkinsci.git.log.Commit;
+import org.junit.Test;
 
 /**
- * Test case that supports creating a Git repository
+ * Unit tests of {@link Commit} class
+ * 
+ * @author Kevin Sawicki (kevin@github.com)
  */
-public abstract class GitTestCase extends Assert {
+public class CommitTest extends GitTestCase {
 
 	/**
-	 * Git helper
+	 * Create commit with null {@link Repository}
 	 */
-	protected GitHelper git;
+	@Test(expected = IllegalArgumentException.class)
+	public void commitWithNullRepository() {
+		new Commit(null, null);
+	}
 
 	/**
-	 * Setup test case
+	 * Create commit with null {@link RevCommit}
 	 * 
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	@Before
-	public void setUp() throws Exception {
-		git = new GitHelper();
+	@Test(expected = IllegalArgumentException.class)
+	public void commitWithNullCommit() throws IOException {
+		new Commit(git.repo(), null);
 	}
 }

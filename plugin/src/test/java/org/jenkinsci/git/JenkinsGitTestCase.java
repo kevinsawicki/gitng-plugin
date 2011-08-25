@@ -21,14 +21,14 @@
  */
 package org.jenkinsci.git;
 
-import org.junit.Before;
-
-import junit.framework.Assert;
+import org.jvnet.hudson.test.HudsonTestCase;
 
 /**
- * Test case that supports creating a Git repository
+ * Base extension of {@link HudsonTestCase}
+ * 
+ * @author Kevin Sawicki (kevin@github.com)
  */
-public abstract class GitTestCase extends Assert {
+public abstract class JenkinsGitTestCase extends HudsonTestCase {
 
 	/**
 	 * Git helper
@@ -40,8 +40,8 @@ public abstract class GitTestCase extends Assert {
 	 * 
 	 * @throws Exception
 	 */
-	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		git = new GitHelper();
 	}
 }
