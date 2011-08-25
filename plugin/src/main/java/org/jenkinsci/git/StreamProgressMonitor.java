@@ -28,6 +28,8 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 /**
  * Progress monitor that writes task information to a configured
  * {@link PrintStream}
+ * 
+ * @author Kevin Sawicki (kevin@github.com)
  */
 public class StreamProgressMonitor implements ProgressMonitor {
 

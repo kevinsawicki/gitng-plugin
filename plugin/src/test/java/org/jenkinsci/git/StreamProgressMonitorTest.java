@@ -30,6 +30,8 @@ import org.junit.Test;
 
 /**
  * Unit tests of {@link StreamProgressMonitor}
+ * 
+ * @author Kevin Sawicki (kevin@github.com)
  */
 public class StreamProgressMonitorTest {
 
