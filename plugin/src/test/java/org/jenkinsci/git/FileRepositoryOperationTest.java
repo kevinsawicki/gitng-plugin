@@ -23,13 +23,12 @@ package org.jenkinsci.git;
 
 import java.io.IOException;
 
-import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.junit.Test;
 
 /**
  * Unit tests of {@link FileRepositoryOperation}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class FileRepositoryOperationTest extends GitTestCase {
@@ -44,19 +43,18 @@ public class FileRepositoryOperationTest extends GitTestCase {
 
 	/**
 	 * Resolve a non-existent repository
-	 * 
+	 *
 	 * @throws IOException
 	 */
-	@Test(expected = RepositoryNotFoundException.class)
 	public void resolveNonExistent() throws IOException {
 		BuildRepository buildRepo = new BuildRepository("a", "b", null);
 		FileRepositoryOperation op = new FileRepositoryOperation(buildRepo);
-		assertNotNull(op.invoke(git.tempDirectory(), null));
+		assertNull(op.invoke(git.tempDirectory(), null));
 	}
 
 	/**
 	 * Resolve a repository in a root directory
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

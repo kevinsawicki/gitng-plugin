@@ -27,6 +27,7 @@ import hudson.remoting.VirtualChannel;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.FS;
@@ -34,7 +35,7 @@ import org.eclipse.jgit.util.FS;
 /**
  * Operation that resolves a file-based {@link Repository} for a
  * {@link BuildRepository}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class FileRepositoryOperation implements FileCallable<Repository> {
@@ -46,7 +47,7 @@ public class FileRepositoryOperation implements FileCallable<Repository> {
 
 	/**
 	 * Create file repository operation
-	 * 
+	 *
 	 * @param repository
 	 */
 	public FileRepositoryOperation(BuildRepository repository) {
@@ -68,6 +69,10 @@ public class FileRepositoryOperation implements FileCallable<Repository> {
 		builder.setFS(FS.DETECTED);
 		builder.setGitDir(gitDir);
 		builder.setMustExist(true);
-		return builder.build();
+		try {
+			return builder.build();
+		} catch (RepositoryNotFoundException rnfe) {
+			return null;
+		}
 	}
 }
