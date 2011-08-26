@@ -35,7 +35,7 @@ import org.eclipse.jgit.lib.Repository;
 /**
  * Operation that creates and clones a {@link Repository} using a
  * {@link BuildRepository}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class CloneOperation implements FileCallable<Repository> {
@@ -46,7 +46,7 @@ public class CloneOperation implements FileCallable<Repository> {
 
 	/**
 	 * Create clone operation
-	 * 
+	 *
 	 * @param repository
 	 */
 	public CloneOperation(final BuildRepository repository) {
@@ -64,6 +64,7 @@ public class CloneOperation implements FileCallable<Repository> {
 			gitDir = file;
 		else
 			gitDir = new File(file, directory);
+
 		CloneCommand clone = Git.cloneRepository();
 		clone.setURI(repo.getUri());
 		clone.setCloneAllBranches(false);
