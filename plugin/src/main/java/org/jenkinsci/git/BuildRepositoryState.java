@@ -24,7 +24,9 @@ package org.jenkinsci.git;
 import hudson.scm.SCMRevisionState;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.gitective.core.Check;
@@ -32,16 +34,17 @@ import org.gitective.core.Check;
 /**
  * Repository state class that stores an {@link ObjectId} representing the state
  * of a {@link BuildRepository}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class BuildRepositoryState extends SCMRevisionState {
+public class BuildRepositoryState extends SCMRevisionState implements
+		Iterable<Entry<BuildRepository, ObjectId>> {
 
-	private Map<BuildRepository, String> states = new HashMap<BuildRepository, String>();
+	private Map<BuildRepository, ObjectId> states = new HashMap<BuildRepository, ObjectId>();
 
 	/**
 	 * Insert a mapping between a repository and an object id
-	 * 
+	 *
 	 * @param repo
 	 * @param id
 	 * @return this repository state
@@ -49,21 +52,31 @@ public class BuildRepositoryState extends SCMRevisionState {
 	public BuildRepositoryState put(BuildRepository repo, ObjectId id) {
 		if (repo == null || id == null)
 			return this;
-		states.put(repo, id.name());
+		states.put(repo, id.copy());
 		return this;
 	}
 
 	/**
 	 * Get object id for repository
-	 * 
+	 *
 	 * @param repo
 	 * @return object id
 	 */
 	public ObjectId get(BuildRepository repo) {
 		if (repo == null)
 			return null;
-		String name = states.get(repo);
-		return name != null ? ObjectId.fromString(name) : null;
+		return states.get(repo);
+	}
+
+	/**
+	 * @return true if empty, false otherwise
+	 */
+	public boolean isEmpty() {
+		return states.isEmpty();
+	}
+
+	public Iterator<Entry<BuildRepository, ObjectId>> iterator() {
+		return states.entrySet().iterator();
 	}
 
 	public int hashCode() {
