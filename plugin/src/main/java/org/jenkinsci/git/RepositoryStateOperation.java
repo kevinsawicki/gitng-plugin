@@ -21,7 +21,6 @@
  */
 package org.jenkinsci.git;
 
-import static org.eclipse.jgit.lib.Constants.FETCH_HEAD;
 import hudson.FilePath.FileCallable;
 import hudson.remoting.VirtualChannel;
 import hudson.scm.SCMRevisionState;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.gitective.core.CommitUtils;
 
 /**
@@ -66,10 +64,7 @@ public class RepositoryStateOperation implements FileCallable<SCMRevisionState> 
 					channel);
 			if (gitRepo == null)
 				continue;
-			RevCommit commit = CommitUtils.getRef(gitRepo, FETCH_HEAD);
-			if (commit == null)
-				commit = CommitUtils.getLatest(gitRepo);
-			state.put(repo, commit);
+			state.put(repo, CommitUtils.getLatest(gitRepo));
 		}
 		return !state.isEmpty() ? state : SCMRevisionState.NONE;
 	}
