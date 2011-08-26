@@ -25,8 +25,6 @@ import com.google.gson.reflect.TypeToken;
 
 import hudson.model.AbstractBuild;
 import hudson.scm.ChangeLogParser;
-import hudson.scm.ChangeLogSet;
-import hudson.scm.ChangeLogSet.Entry;
 
 import java.io.File;
 import java.io.FileReader;
@@ -36,14 +34,13 @@ import java.util.List;
 
 /**
  * Commit log reader class.
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class CommitLogReader extends ChangeLogParser {
 
-	public ChangeLogSet<? extends Entry> parse(
-			@SuppressWarnings("rawtypes") AbstractBuild build, File file)
-			throws IOException {
+	public CommitLog parse(@SuppressWarnings("rawtypes") AbstractBuild build,
+			File file) throws IOException {
 		FileReader reader = new FileReader(file);
 		List<Commit> commits;
 		Type type = new TypeToken<List<Commit>>() {

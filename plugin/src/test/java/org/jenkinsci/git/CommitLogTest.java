@@ -22,8 +22,6 @@
 package org.jenkinsci.git;
 
 import hudson.model.User;
-import hudson.scm.ChangeLogSet;
-import hudson.scm.ChangeLogSet.Entry;
 import hudson.scm.EditType;
 import hudson.tasks.Mailer;
 
@@ -39,14 +37,14 @@ import org.jenkinsci.git.log.CommitLogWriter;
 
 /**
  * Unit tests of classes used to build a changelog
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class CommitLogTest extends JenkinsGitTestCase {
 
 	/**
 	 * Test commit that contains a single added file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCommitWithAdd() throws Exception {
@@ -75,7 +73,7 @@ public class CommitLogTest extends JenkinsGitTestCase {
 
 	/**
 	 * Test commit that contains a single edited file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testCommitWithEdit() throws Exception {
@@ -105,7 +103,7 @@ public class CommitLogTest extends JenkinsGitTestCase {
 
 	/**
 	 * Test writing and reading back a single commit
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void testReadWriteSingleCommit() throws Exception {
@@ -115,18 +113,16 @@ public class CommitLogTest extends JenkinsGitTestCase {
 		CommitLogWriter writer = new CommitLogWriter(new FileWriter(log));
 		writer.write(commit).close();
 		CommitLogReader reader = new CommitLogReader();
-		ChangeLogSet<? extends Entry> set = reader.parse(null, log);
+		CommitLog set = reader.parse(null, log);
 		assertNotNull(set);
 		assertFalse(set.isEmptySet());
-		assertTrue(set instanceof CommitLog);
-		CommitLog commitLog = (CommitLog) set;
-		Commit[] commits = commitLog.toArray();
+		Commit[] commits = set.toArray();
 		assertNotNull(commits);
 		assertEquals(1, commits.length);
 		Commit parsed = commits[0];
 		assertNotNull(parsed);
 		assertTrue(commit.equals(parsed));
-		assertEquals(commitLog, parsed.getParent());
+		assertEquals(set, parsed.getParent());
 		assertEquals(commit.getMsg(), parsed.getMsg());
 		assertEquals(commit.getCommitId(), parsed.getCommitId());
 		assertEquals(commit.getTimestamp(), parsed.getTimestamp());
