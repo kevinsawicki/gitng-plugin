@@ -21,10 +21,8 @@
  */
 package org.jenkinsci.git;
 
-import hudson.FilePath.FileCallable;
-import hudson.remoting.VirtualChannel;
+import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.FetchCommand;
@@ -40,10 +38,10 @@ import org.gitective.core.GitException;
 
 /**
  * Operation that fetches from a {@link BuildRepository} configuration
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class FetchOperation implements FileCallable<RevCommit> {
+public class FetchOperation implements Callable<RevCommit, IOException> {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 3956046067095683554L;
@@ -56,7 +54,7 @@ public class FetchOperation implements FileCallable<RevCommit> {
 
 	/**
 	 * Create fetch operation
-	 * 
+	 *
 	 * @param repo
 	 * @param gitRepo
 	 */
@@ -66,7 +64,7 @@ public class FetchOperation implements FileCallable<RevCommit> {
 
 	/**
 	 * Create fetch operation
-	 * 
+	 *
 	 * @param repo
 	 * @param gitRepo
 	 * @param monitor
@@ -82,7 +80,7 @@ public class FetchOperation implements FileCallable<RevCommit> {
 		this.monitor = monitor;
 	}
 
-	public RevCommit invoke(File f, VirtualChannel channel) throws IOException {
+	public RevCommit call() throws IOException {
 		FetchCommand fetch = Git.wrap(gitRepo).fetch();
 		fetch.setRemote(repo.getUri());
 		fetch.setRefSpecs(new RefSpec(repo.getBranch()));

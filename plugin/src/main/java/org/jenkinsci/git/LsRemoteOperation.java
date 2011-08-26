@@ -21,10 +21,8 @@
  */
 package org.jenkinsci.git;
 
-import hudson.FilePath.FileCallable;
-import hudson.remoting.VirtualChannel;
+import hudson.remoting.Callable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
@@ -39,7 +37,7 @@ import org.eclipse.jgit.lib.Repository;
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class LsRemoteOperation implements FileCallable<ObjectId> {
+public class LsRemoteOperation implements Callable<ObjectId, IOException> {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = -3623182589852806015L;
@@ -65,8 +63,7 @@ public class LsRemoteOperation implements FileCallable<ObjectId> {
 		this.gitRepo = gitRepo;
 	}
 
-	public ObjectId invoke(File file, VirtualChannel channel)
-			throws IOException {
+	public ObjectId call() throws IOException {
 		LsRemoteCommand ls = Git.wrap(gitRepo).lsRemote();
 		ls.setRemote(repo.getUri());
 		String branch = repo.getBranch();
@@ -83,4 +80,5 @@ public class LsRemoteOperation implements FileCallable<ObjectId> {
 				return ref.getObjectId();
 		return null;
 	}
+
 }

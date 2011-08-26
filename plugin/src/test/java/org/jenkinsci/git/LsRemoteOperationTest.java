@@ -66,7 +66,7 @@ public class LsRemoteOperationTest extends GitTestCase {
 		BuildRepository repo = new BuildRepository(gitRepo.getDirectory()
 				.toURI().toString(), Constants.R_HEADS + Constants.MASTER, null);
 		LsRemoteOperation op = new LsRemoteOperation(repo, gitRepo);
-		assertNull(op.invoke(null, null));
+		assertNull(op.call());
 	}
 
 	/**
@@ -81,8 +81,8 @@ public class LsRemoteOperationTest extends GitTestCase {
 				.toURI().toString(), Constants.R_HEADS + Constants.MASTER, null);
 		LsRemoteOperation op = new LsRemoteOperation(repo, gitRepo);
 		RevCommit commit1 = git.add("file.txt", "a");
-		assertEquals(commit1, op.invoke(null, null));
+		assertEquals(commit1, op.call());
 		RevCommit commit2 = git.add("file.txt", "b");
-		assertEquals(commit2, op.invoke(null, null));
+		assertEquals(commit2, op.call());
 	}
 }

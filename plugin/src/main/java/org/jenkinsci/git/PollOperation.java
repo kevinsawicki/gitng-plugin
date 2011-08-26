@@ -71,7 +71,7 @@ public class PollOperation implements FileCallable<PollingResult> {
 			if (gitRepo == null)
 				return PollingResult.BUILD_NOW;
 			LsRemoteOperation op = new LsRemoteOperation(repo, gitRepo);
-			ObjectId latest = op.invoke(file, channel);
+			ObjectId latest = op.call();
 			if (latest == null)
 				return PollingResult.BUILD_NOW;
 			ObjectId current = state.get(repo);

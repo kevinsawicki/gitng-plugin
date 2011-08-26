@@ -33,14 +33,14 @@ import org.junit.Test;
 
 /**
  * Unit tests of {@link FetchOperation}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class FetchOperationTest extends GitTestCase {
 
 	/**
 	 * Create operation with null build repository
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -58,7 +58,7 @@ public class FetchOperationTest extends GitTestCase {
 
 	/**
 	 * Test fetching single commit
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -75,7 +75,7 @@ public class FetchOperationTest extends GitTestCase {
 		StreamProgressMonitor monitor = new StreamProgressMonitor(
 				new PrintStream(out));
 		FetchOperation fetch = new FetchOperation(repo, cloned, monitor);
-		RevCommit fetched = fetch.invoke(null, null);
+		RevCommit fetched = fetch.call();
 		assertEquals(commit2, fetched);
 		assertTrue(out.toString().length() > 0);
 	}
