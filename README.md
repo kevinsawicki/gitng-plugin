@@ -1,6 +1,6 @@
 # Jenkins Git Plugin (New)
 
-This project is new implementation of a [Jenkins](http://jenkins-ci.org/)
+This project is a new implementation of a [Jenkins](http://jenkins-ci.org/)
 SCM extension for the [Git](http://git-scm.com/) version control system.
 
 ## Highlights
