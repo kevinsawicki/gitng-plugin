@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.util.FS;
@@ -67,7 +68,10 @@ public class FileRepositoryOperation implements FileCallable<Repository> {
 			gitDir = new File(file, directory);
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		builder.setFS(FS.DETECTED);
-		builder.setGitDir(gitDir);
+		if (Constants.DOT_GIT.equals(gitDir.getName()))
+			builder.setGitDir(gitDir);
+		else
+			builder.setWorkTree(gitDir);
 		builder.setMustExist(true);
 		try {
 			return builder.build();
