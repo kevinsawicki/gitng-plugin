@@ -21,7 +21,8 @@
  */
 package org.jenkinsci.git;
 
-import java.io.File;
+import hudson.remoting.Callable;
+
 import java.io.IOException;
 
 import org.eclipse.jgit.dircache.DirCache;
@@ -31,15 +32,12 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 
-import hudson.FilePath.FileCallable;
-import hudson.remoting.VirtualChannel;
-
 /**
  * Operation that checks out a specific commit
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class TreeCheckoutOperation implements FileCallable<ObjectId> {
+public class TreeCheckoutOperation implements Callable<ObjectId, IOException> {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1247715173832080149L;
@@ -65,8 +63,7 @@ public class TreeCheckoutOperation implements FileCallable<ObjectId> {
 		this.commit = commit;
 	}
 
-	public ObjectId invoke(File file, VirtualChannel channel)
-			throws IOException {
+	public ObjectId call() throws IOException {
 		RevTree tree = commit.getTree();
 		DirCache dirCache = repo.lockDirCache();
 		DirCacheCheckout co = new DirCacheCheckout(repo, dirCache, tree);

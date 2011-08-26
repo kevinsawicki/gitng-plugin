@@ -70,7 +70,7 @@ public class TreeCheckoutOperationTest extends GitTestCase {
 		assertEquals('b', (char) reader.read());
 		reader.close();
 		TreeCheckoutOperation op = new TreeCheckoutOperation(repo, commit);
-		ObjectId tree = op.invoke(null, null);
+		ObjectId tree = op.call();
 		assertEquals(commit.getTree(), tree);
 		reader = new FileReader(file);
 		assertEquals('a', (char) reader.read());
