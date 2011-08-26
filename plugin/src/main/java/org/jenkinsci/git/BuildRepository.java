@@ -21,6 +21,9 @@
  */
 package org.jenkinsci.git;
 
+import static org.eclipse.jgit.lib.Constants.MASTER;
+import static org.eclipse.jgit.lib.Constants.R_HEADS;
+
 import java.io.Serializable;
 
 import org.gitective.core.Check;
@@ -29,13 +32,18 @@ import org.kohsuke.stapler.export.Exported;
 
 /**
  * Repository used in a build
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class BuildRepository implements Serializable {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 6313364458960227507L;
+
+	/**
+	 * Default master branch ref
+	 */
+	public static final String BRANCH_DEFAULT = R_HEADS + MASTER;
 
 	private transient int hashCode = -1;
 
@@ -47,7 +55,7 @@ public class BuildRepository implements Serializable {
 
 	/**
 	 * Create build repository
-	 * 
+	 *
 	 * @param uri
 	 * @param branch
 	 * @param directory
