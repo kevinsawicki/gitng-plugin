@@ -1,11 +1,11 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
          
-    <f:entry title="Git Repositories">
+    <f:entry title="Repositories">
       <f:repeatable name="repo" field="repositories" minimum="1">
         <table width="100%">
         
-          <f:entry title="${%Repository URL:}" field="uri">
+          <f:entry title="${%Git URL:}" field="uri" help="/plugin/gitng-plugin/help-repoUri.html">
             <f:textbox/>
           </f:entry>
           
