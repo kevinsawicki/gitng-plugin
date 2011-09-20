@@ -1,0 +1,6 @@
+#Fri Aug 26 00:22:25 PDT 2011
+eclipse.preferences.version=1
+editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup=true
+sp_cleanup.on_save_use_additional_actions=true
+sp_cleanup.remove_trailing_whitespaces=true
+sp_cleanup.remove_trailing_whitespaces_all=true
