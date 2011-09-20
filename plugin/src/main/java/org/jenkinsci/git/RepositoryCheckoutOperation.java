@@ -32,6 +32,7 @@ import java.util.Collection;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.RefUpdate;
+import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.gitective.core.CommitUtils;
@@ -98,7 +99,19 @@ public class RepositoryCheckoutOperation implements FileCallable<Boolean> {
 				new TreeCheckoutOperation(gitRepo, fetched).call();
 				RefUpdate refUpdate = gitRepo.updateRef(Constants.HEAD, true);
 				refUpdate.setNewObjectId(fetched);
-				refUpdate.forceUpdate();
+				Result result = refUpdate.forceUpdate();
+				if (result == null)
+					throw new IOException("Null ref update result");
+				switch (result) {
+				case NEW:
+				case FORCED:
+				case FAST_FORWARD:
+				case NO_CHANGE:
+					// These are the acceptable results
+					break;
+				default:
+					throw new IOException(result.name());
+				}
 			}
 		} finally {
 			writer.close();
