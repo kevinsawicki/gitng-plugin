@@ -23,6 +23,7 @@ package org.jenkinsci.git;
 
 import hudson.FilePath;
 import hudson.FilePath.FileCallable;
+import hudson.model.TaskListener;
 import hudson.remoting.VirtualChannel;
 
 import java.io.File;
@@ -46,7 +47,8 @@ import org.jenkinsci.git.log.CommitLogWriterFilter;
  *
  * @author Kevin Sawicki (kevin@github.com)
  */
-public class RepositoryCheckoutOperation implements FileCallable<Boolean> {
+public class RepositoryCheckoutOperation extends TaskListenerOperation
+		implements FileCallable<Boolean> {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 8944211954428830644L;
@@ -63,6 +65,20 @@ public class RepositoryCheckoutOperation implements FileCallable<Boolean> {
 	 */
 	public RepositoryCheckoutOperation(
 			Collection<BuildRepository> repositories, FilePath commitLog) {
+		this(repositories, commitLog, null);
+	}
+
+	/**
+	 * Create repository checkout operation
+	 *
+	 * @param repositories
+	 * @param commitLog
+	 * @param listener
+	 */
+	public RepositoryCheckoutOperation(
+			Collection<BuildRepository> repositories, FilePath commitLog,
+			TaskListener listener) {
+		super(listener);
 		if (repositories == null)
 			throw new IllegalArgumentException("Repositories cannot be null");
 		if (commitLog == null)
@@ -76,6 +92,9 @@ public class RepositoryCheckoutOperation implements FileCallable<Boolean> {
 		CommitLogWriter writer = new CommitLogWriter(new OutputStreamWriter(
 				log.write()));
 		CommitLogWriterFilter filter = new CommitLogWriterFilter(writer);
+		StreamProgressMonitor monitor = null;
+		if (listener != null)
+			monitor = new StreamProgressMonitor(listener.getLogger());
 		try {
 			for (BuildRepository repo : repos) {
 				Repository gitRepo = new FileRepositoryOperation(repo).invoke(
@@ -86,7 +105,8 @@ public class RepositoryCheckoutOperation implements FileCallable<Boolean> {
 				else
 					current = CommitUtils.getLatest(gitRepo);
 
-				RevCommit fetched = new FetchOperation(repo, gitRepo).call();
+				RevCommit fetched = new FetchOperation(repo, gitRepo, monitor)
+						.call();
 				if (fetched == null)
 					return false;
 

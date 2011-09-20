@@ -88,7 +88,7 @@ public class RepositoryManager extends SCM {
 			FilePath workspace, BuildListener listener, File changelogFile)
 			throws IOException, InterruptedException {
 		RepositoryCheckoutOperation operation = new RepositoryCheckoutOperation(
-				repos, new FilePath(changelogFile));
+				repos, new FilePath(changelogFile), listener);
 		return workspace.act(operation);
 	}
 
