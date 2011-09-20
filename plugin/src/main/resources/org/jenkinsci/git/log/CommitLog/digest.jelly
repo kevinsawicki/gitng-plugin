@@ -1,0 +1,10 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <j:choose>
+      Commits
+      <ol>
+        <j:forEach var="commit" items="${it.items}" varStatus="loop">
+          <li>${commit.msgAnnotated}</li>
+        </j:forEach>
+      </ol>
+  </j:choose>
+</j:jelly>

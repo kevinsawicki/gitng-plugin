@@ -1,0 +1,30 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+         
+    <f:entry title="Git Repositories">
+      <f:repeatable name="repo" field="repositories" minimum="1">
+        <table width="100%">
+        
+          <f:entry title="${%Repository URL:}" field="uri">
+            <f:textbox/>
+          </f:entry>
+          
+          <f:entry title="${%Branch:}" field="branch">
+            <f:textbox default="refs/heads/master"/>
+          </f:entry>
+          
+           <f:entry title="${%Directory:}" field="directory">
+            <f:textbox default="."/>
+          </f:entry>
+          
+          <f:entry>
+            <div align="right">
+              <input type="button" value="Delete Repository" class="repeatable-delete" style="margin-left: 1em;"/>
+            </div>
+          </f:entry>
+          
+        </table>
+      </f:repeatable>
+    </f:entry>    
+    
+</j:jelly>
