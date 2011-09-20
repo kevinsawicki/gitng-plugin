@@ -28,7 +28,7 @@ import org.eclipse.jgit.lib.ProgressMonitor;
 /**
  * Progress monitor that writes task information to a configured
  * {@link PrintStream}
- * 
+ *
  * @author Kevin Sawicki (kevin@github.com)
  */
 public class StreamProgressMonitor implements ProgressMonitor {
@@ -44,7 +44,7 @@ public class StreamProgressMonitor implements ProgressMonitor {
 
 	/**
 	 * Create a progress monitor that uses the given non-null stream
-	 * 
+	 *
 	 * @param stream
 	 *            must be non-null
 	 */
@@ -59,8 +59,7 @@ public class StreamProgressMonitor implements ProgressMonitor {
 	}
 
 	public void beginTask(String title, int totalWork) {
-		if (!done)
-			endTask();
+		endTask();
 		stream.print(title);
 		if (totalWork != UNKNOWN) {
 			stream.print(": ");
@@ -75,7 +74,10 @@ public class StreamProgressMonitor implements ProgressMonitor {
 	}
 
 	public void endTask() {
+		if (done)
+			return;
 		stream.println(DONE);
+		done = true;
 	}
 
 	public boolean isCancelled() {
