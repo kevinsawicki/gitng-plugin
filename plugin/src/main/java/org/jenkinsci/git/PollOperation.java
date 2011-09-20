@@ -59,7 +59,7 @@ public class PollOperation implements FileCallable<PollingResult> {
 			throw new IllegalArgumentException("Baseline cannot be null");
 		if (repos == null)
 			throw new IllegalArgumentException("Repos cannot be null");
-		this.state = baseline;
+		state = baseline;
 		this.repos = repos;
 	}
 

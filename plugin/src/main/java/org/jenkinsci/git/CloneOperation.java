@@ -42,6 +42,7 @@ public class CloneOperation implements FileCallable<Repository> {
 
 	/** serialVersionUID */
 	private static final long serialVersionUID = 6628881429338391447L;
+
 	private final BuildRepository repo;
 
 	/**
@@ -52,7 +53,7 @@ public class CloneOperation implements FileCallable<Repository> {
 	public CloneOperation(final BuildRepository repository) {
 		if (repository == null)
 			throw new IllegalArgumentException("Repository cannot be null");
-		this.repo = repository;
+		repo = repository;
 	}
 
 	public Repository invoke(File file, VirtualChannel channel)
